@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat Room</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body html lang="en">
+
+<div class="container" ng-app="app" ng-controller="controller">
+    <div class="row">
+        <div class="col-xs-12 jumbotron" align="center"><h1>Chat Room</h1></div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12" align="center">
+            {% raw %}
+            <textarea rows="20" cols="120" ng-model="message_display" ng-disabled="true"></textarea>
+            {% endraw %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12" align="center">
+            <input type="text" size="120" ng-model="text_entry_field" ng-keypress="key_handler($event)"/>
+        </div>
+    </div>
+</div>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular-cookies.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+<script>
+
+    var controller = function($scope, $http, $interval, $log){
+
+
+        var refresh_chat_display = function(){
+            $http.get("/getmessages").then(function(res){
+                $scope.message_display = ""
+
+                var messages = res.data.messages
+                for(var i in messages){
+                    var msg_rec = res.data.messages[i]
+                    var msg_string = msg_rec.user + " : " + msg_rec.message + "\n"
+                    $scope.message_display += msg_string
+                }
+            })
+        }
+
+        $interval(refresh_chat_display, 2000)
+
+        $scope.key_handler = function(event){
+
+            var ENTER_KEY = 13
+            if(event.which == ENTER_KEY){
+                var new_message = $scope.text_entry_field
+
+                var req = {
+                    url:"/sendmessage",
+                    method:"post",
+                    headers:{
+                        "Content-type":"application/json"
+                    },
+                    data: {"message": $scope.text_entry_field}
+                }
+
+                $http(req).then(function(res){}, function(res){})
+
+                $scope.text_entry_field = ""
+            }
+        }
+    }
+
+    var app = angular.module("app", [])
+    app.controller("controller", controller)
+</script>
+
+</body>
+</html>
