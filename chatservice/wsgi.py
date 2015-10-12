@@ -1,8 +1,20 @@
 from flask import Flask, redirect, request, session, abort, make_response, url_for, render_template, jsonify
 import configparser
 import chatmodel
+import os
+
 app = Flask(__name__)
 app.debug=True
+
+config_file_name = "settings.ini"
+config_dir = __file__.rsplit("/", maxsplit=1)[0]
+config_file_abs_path = "{}{}{}".format(config_dir, "/", config_file_name)
+app.logger.info("CONFIG FILE PATH FOR SECRET KEY: {}".format(config_file_abs_path))
+
+cp = configparser.ConfigParser()
+cp.read(config_file_abs_path)
+secret_key = cp["settings"]["secret_key"]
+app.secret_key = secret_key
 
 m = chatmodel.ChatModel(app)
 
@@ -10,6 +22,7 @@ m = chatmodel.ChatModel(app)
 @app.route("/")
 def index():
     return redirect("/static/login.html")
+
 
 @app.route("/login", methods=["POST"])
 def login():
@@ -83,11 +96,5 @@ def get_messages():
     return jsonify({"messages": m.Messages})
 
 if __name__ == '__main__':
-    import os
-    import sys
-    cp = configparser.ConfigParser()
-    cp.read("settings.ini")
-    secret_key = cp["settings"]["secret_key"]
-    app.secret_key = secret_key
     app.static_folder = "../static/"
     app.run("0.0.0.0", debug=True)
