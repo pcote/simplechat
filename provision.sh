@@ -34,7 +34,7 @@ function setup_web_server(){
      sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password temporary_password'
      sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password temporary_password'
      sudo apt-get install -y mysql-server
-     # mysql --user=root --password=temporary_password < /basedir/db_setup.sql
+     mysql --user=root --password=temporary_password < /basedir/db_setup.sql
  }
 
 function start_web_service(){
