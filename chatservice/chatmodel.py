@@ -2,14 +2,18 @@
 from flask.ext.sqlalchemy import SQLAlchemy
 from configparser import ConfigParser
 import hashlib
+import os
 
 class ChatModel():
     def __init__(self, app):
         self.app = app
         import os
-        file_path = "settings.ini"
+        config_file_name = "settings.ini"
+        config_dir = __file__.rsplit(os.path.sep, maxsplit=1)[0]
+        config_file_abs_path = "{}{}{}".format(config_dir, os.path.sep, config_file_name)
+        
         parser = ConfigParser()
-        parser.read(file_path)
+        parser.read(config_file_abs_path)
         db_user = parser["settings"]["db_user"]
         db_pw = parser["settings"]["db_password"]
         db_conn_str = "mysql+pymysql://{}:{}@localhost/simplechat".format(db_user, db_pw)
