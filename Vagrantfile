@@ -7,8 +7,8 @@ Vagrant.configure(2) do |config|
   config.vm.network "forwarded_port", guest: 80, host: 80
   config.vm.network "private_network", ip: "192.168.33.10"
 
-  config.vm.synced_folder "./chatservice", "/home/simplechat/"
-  config.vm.synced_folder "./static", "/var/www/simplechat/static"
+  #config.vm.synced_folder "./chatservice", "/home/simplechat/"
+  #config.vm.synced_folder "./static", "/var/www/simplechat/static"
   config.vm.synced_folder ".", "/basedir"
 
   config.vm.provider "virtualbox" do |vb|

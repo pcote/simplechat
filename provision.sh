@@ -1,5 +1,16 @@
 #!/bin/bash
 
+# replace the synced folders
+function replace_synced_folders(){
+    mkdir /home/simplechat;
+    cp -r /basedir/chatservice/* /home/simplechat/
+
+    sudo mkdir /var/www;
+    sudo mkdir /var/www/simplechat;
+    sudo mkdir /var/www/simplechat/static;
+    sudo cp -r /basedir/static/* /var/www/simplechat/static;
+}
+
 function setup_web_server(){
 
      sudo apt-get install -y nginx
@@ -43,8 +54,10 @@ function start_web_service(){
    sudo service simplechat restart
 }
 
+
 sudo apt-get update
 sudo apt-get install -y dos2unix
+replace_synced_folders
 setup_web_server
 setup_python
 setup_security
