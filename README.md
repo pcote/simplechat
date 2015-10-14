@@ -43,7 +43,16 @@ And that's it.  If you want to log in again later, just go to http://localhost a
 
 Chatting with other people
 ==========================
-TODO
+You'll want to communicate with other people.  This requires making it available on the Internet.  Here's a simple way.
+
+1.  Download and install ngrok ( https://ngrok.com/ )
+
+2.  Open up a command prompt and type this:
+ngrok 80
+
+3.  Ngrok will give you a url that you can send to a friend that you want to chat with.
+
+4.  Have a nice chat.
 
 
 Security considerations
