@@ -57,5 +57,21 @@ ngrok 80
 
 Security considerations
 ========================
-TODO
+The default setup for this application is not intended to be secure.  How to secure it properly is left to the discretion of the user.
+That being said, here are some pointers to consider.....
+
+- Before you type "vagrant up", change the database password.  The default password is "temporary_password" and it needs changing in a couple of places.
+    - provision.sh: It shows up three times in the setup_database function.
+    - chatservice/settings.ini: Change the db_password parameter so it matches what you set it to in provision.sh
+    - Use the mysql administration tool of your choice to change the password of the mysql root account.
+
+- Change the secret key: The secret key helps secure the session cookie used by simplechat.
+    - chatservice/settings.ini:  Change the "secret_key" parameter to a sufficiently long and random string of characters.
+
+- Make a new db_user with restricted privileges.
+    - chatservice/settings.ini: Change the db_user parameter from "root" to the less privileged user account.
+    - chatservice/settings.ini: Change the db_password parameter to the password that matches the less privileged account.
+    - Make sure the less privileged account in question exists with the password specified.
+        - The account should have SELECT and INSERT rights on the USERS and MESSAGES tables in the SIMPLECHAT database.
+        - See the manual for the MySQL admin tool of your choice for specifics on how to carry this out.
 
