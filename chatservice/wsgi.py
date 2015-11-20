@@ -21,11 +21,20 @@ m = chatmodel.ChatModel(app)
 
 @app.route("/")
 def index():
+    """
+    Simple redirector to the login page.
+    :return: 302 message to send the user to login.html
+    """
     return redirect("/static/login.html")
 
 
 @app.route("/login", methods=["POST"])
 def login():
+    """
+    Basic authorization process for logging the user into the system.
+    Invoked via the login form.
+    :return: A message for the front side Javascript to handle.  Either 200 if login creds pass or 401 if it doesn't.
+    """
     auth = request.authorization
     username = auth.username
     password = auth.password
@@ -42,6 +51,11 @@ def login():
 
 @app.route("/createaccount", methods=["POST"])
 def create_account():
+    """
+    Makes an account for a new user and sends them straight to chat if it succeeds.
+    Sends an error message otherwise.
+    :return: Either a redirect or an error message depending on success or failure to make an account.
+    """
     json_data = request.get_json()
     username = json_data["username"]
     password = json_data["password"]
@@ -70,6 +84,10 @@ def create_account():
 
 @app.route("/chatroom", methods=["GET"])
 def show_chatroom():
+    """
+    The templated chat room.
+    :return:
+    """
     if session and session["logged_in"]:
         return render_template("chatroom.html")
     return redirect(url_for("index"))
@@ -77,6 +95,10 @@ def show_chatroom():
 
 @app.route("/sendmessage", methods=["POST"])
 def send_message():
+    """
+    Endpoint where sending chat messages which get passed into the database.
+    :return: Either a generic 200 response or 401 depending on whether or not user is properly logged in.
+    """
     if session and session["logged_in"]:
         username = session["username"]
         json_data = request.get_json()
@@ -93,6 +115,10 @@ def send_message():
 
 @app.route("/getmessages", methods=["GET"])
 def get_messages():
+    """
+    Grab all the chat messages and send it back to the chat interface as json.
+    :return: json chat messages
+    """
     return jsonify({"messages": m.Messages})
 
 if __name__ == '__main__':
